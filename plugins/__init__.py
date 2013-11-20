@@ -40,6 +40,24 @@ def dir_before_file(model, resources):
             model = resource.model
             host = model.host
 
+
+            for dir in host.directories:
+                dir_res = Resource.get_resource(dir)
+                if dir_res is not None and os.path.dirname(resource.path) == dir_res.path:
+                    resource.requires.add(dir_res.id)
+
+@dependency_manager
+def package_before_service(model, resources):
+    """
+        If a file is defined on a host, then make the file depend on its parent directory
+    """
+    # loop over all resources to find files
+    for _id, resource in resources.items():
+        res_class = resource.model.__class__
+        if resource.model.__module__ == "std" and res_class.__name__ == "File":
+            model = resource.model
+            host = model.host
+
             # now find all packages on the same host as the yum repo file and add the repo as a
             # dependency if it is not already a dependency
             for dir in host.directories:
