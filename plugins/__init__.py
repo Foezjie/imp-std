@@ -84,4 +84,4 @@ def setup_stack_deps(stack):
             pkg = pkg.value
             if pkg.id not in cfg.requires:
                 cfg.requires.add(pkg.id)
-                print(kg.id + " toegevoegd aan " + cfg)
+                print(pkg.id + " toegevoegd aan " + cfg)
